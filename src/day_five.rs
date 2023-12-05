@@ -1,4 +1,4 @@
-use std::{fs, u64};
+use std::{fs, u64, usize};
 
 #[derive(Debug)]
 struct MapRecord(u64, u64, u64);
@@ -140,6 +140,40 @@ pub fn solve_part_two_brute() {
     println!("day five smallest loc: {}, {min}", locs[0]);
 }
 
+fn part_two_recur(
+    start: u64,
+    end: u64,
+    step: usize,
+    records: &Vec<Vec<MapRecord>>,
+    inputs: &Vec<u64>,
+) -> u64 {
+    for i in (start..end).step_by(step) {
+        let mut val = i;
+        'outer: for v in records.iter() {
+            for recs in v {
+                if val >= recs.0 && val <= recs.0 + recs.2 {
+                    val = recs.1 + (val - recs.0);
+                    continue 'outer;
+                }
+            }
+        }
+        for (idx, &j) in inputs.iter().enumerate() {
+            if idx % 2 == 1 {
+                continue;
+            }
+
+            if (j..j + inputs[idx + 1]).contains(&val) {
+                if step == 1 {
+                    return i;
+                } else {
+                    return part_two_recur(i - (step) as u64, i, step / 10, records, inputs);
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 pub fn solve_part_two() {
     let path: &str = "./data/five.txt";
     let err_msg = format!("{} not found!", path);
@@ -173,39 +207,8 @@ pub fn solve_part_two() {
             });
         records_set.push(data);
     }
-    let mut locs = Vec::new();
-    let mut min = u64::MAX;
-
     records_set.reverse();
 
-    for i in (0..).step_by(10) {
-        let mut val = i;
-        'outer: for v in records_set.iter() {
-            for recs in v {
-                if val >= recs.0 && val <= recs.0 + recs.2 {
-                    val = recs.1 + (val - recs.0);
-                    // println!("{}<-{} | {i}->{val}", recs.0, recs.1);
-                    min = min.min(val);
-                    continue 'outer;
-                }
-            }
-        }
-        println!("{i}->{val}");
-
-        for (idx, &j) in inputs.iter().enumerate() {
-            if idx % 2 == 1 {
-                continue;
-            }
-
-            if (j..j + inputs[idx + 1]).contains(&val) {
-                locs.push(i);
-            }
-        }
-        if locs.len() == 1 {
-            break;
-        }
-    }
-
-    locs.sort();
-    println!("day five smallest loc: {:?}", locs);
+    let ans = part_two_recur(0, u64::MAX, 10000, &records_set, &inputs);
+    println!("day five smallest loc: {}", ans);
 }
