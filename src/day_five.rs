@@ -210,5 +210,5 @@ pub fn solve_part_two() {
     records_set.reverse();
 
     let ans = part_two_recur(0, u64::MAX, 10000, &records_set, &inputs);
-    println!("day five smallest loc: {}", ans);
+    println!("[Day five] smallest location: {}", ans);
 }

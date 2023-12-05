@@ -19,7 +19,7 @@ impl Game {
         return true;
     }
 
-    fn min_set_cubes(&self) -> (u32, u32, u32) {
+    fn get_min_set_cubes(&self) -> (u32, u32, u32) {
         let (mut r, mut g, mut b) = (0, 0, 0);
         for ele in self.sets.iter() {
             r = r.max(ele.0);
@@ -132,7 +132,7 @@ pub fn solve_part_two() {
         let game: Result<Game, GameError> = ln.try_into();
         match game {
             Ok(val) => {
-                let (r, g, b) = val.min_set_cubes();
+                let (r, g, b) = val.get_min_set_cubes();
                 // println!("{r} {g} {b}");
                 sum += r*g*b;
             }
