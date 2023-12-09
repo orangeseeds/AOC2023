@@ -1,4 +1,4 @@
-use std::{fs, u64, usize};
+use std::{fs, time::Instant, u64, usize};
 
 #[derive(Debug)]
 struct MapRecord(u64, u64, u64);
@@ -112,6 +112,7 @@ pub fn solve_part_two_brute() {
     let mut locs = Vec::new();
     let mut min = u64::MAX;
 
+    let start = Instant::now();
     for (idx, &i) in inputs.iter().enumerate() {
         if idx % 2 == 1 {
             continue;
@@ -138,6 +139,8 @@ pub fn solve_part_two_brute() {
 
     locs.sort();
     println!("day five smallest loc: {}, {min}", locs[0]);
+    let duration = start.elapsed();
+    println!("Time elapsed in expensive_function() is: {:?}", duration);
 }
 
 fn part_two_recur(
@@ -163,7 +166,7 @@ fn part_two_recur(
             }
 
             if (j..j + inputs[idx + 1]).contains(&val) {
-                if step == 1 {
+                if step <= 1 {
                     return i;
                 } else {
                     return part_two_recur(i - (step) as u64, i, step / 10, records, inputs);
@@ -209,6 +212,9 @@ pub fn solve_part_two() {
     }
     records_set.reverse();
 
-    let ans = part_two_recur(0, u64::MAX, 10000, &records_set, &inputs);
+    let start = Instant::now();
+    let ans = part_two_recur(0, u64::MAX, 100000, &records_set, &inputs);
     println!("[Day five] smallest location: {}", ans);
+    let duration = start.elapsed();
+    println!("Time elapsed in expensive_function() is: {:?}", duration);
 }

@@ -3,6 +3,7 @@ mod day_four;
 mod day_one;
 mod day_three;
 mod day_two;
+mod day_six;
 
 fn main() {
     day_one::solve_part_one();
@@ -19,4 +20,8 @@ fn main() {
 
     day_five::solve_part_one();
     day_five::solve_part_two();
+
+
+    day_six::solve_part_one();
+    day_six::solve_part_two();
 }
